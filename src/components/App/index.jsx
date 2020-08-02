@@ -13,7 +13,8 @@ const Map = ReactMapboxGl({
 class App extends Component {
   state = {
     flats: [],
-    center: [2.3522, 48.8566]
+    center: [2.3522, 48.8566],
+    selectedFlat: null
   };
 
   componentDidMount() {
@@ -26,17 +27,20 @@ class App extends Component {
     const { flats } = this.state;
     const selectedFlat = flats.find(flat => flat.id === flatId);
 
-    this.setState({ center: [selectedFlat.lng, selectedFlat.lat]})
+    this.setState({
+      center: [selectedFlat.lng, selectedFlat.lat],
+      selectedFlat: selectedFlat
+    })
   }
 
   render () {
-    const { flats, center } = this.state;
+    const { flats, center, selectedFlat } = this.state;
 
     return (
       <div className="app">
         <div className="main">
           <input className="search" />
-          <FlatList flats={flats} onSelect={this.handleSelect} />
+          <FlatList selectedFlat={selectedFlat} flats={flats} onSelect={this.handleSelect} />
         </div>
         <div className="map">
           <Map
@@ -47,6 +51,7 @@ class App extends Component {
             {flats.map(flat => {
               return (
                 <FlatMarker
+                  selected={flat === selectedFlat}
                   key={flat.id}
                   price={flat.price}
                   lng={flat.lng}

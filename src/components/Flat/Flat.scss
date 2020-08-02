@@ -13,4 +13,8 @@
   .flat-title {
     margin-top: 10px;
   }
+
+  &.selected {
+    box-shadow: 0.2px 0.2px 15px;
+  }
 }
