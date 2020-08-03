@@ -5,6 +5,11 @@
     flex-basis: 60%;
     flex-direction: column;
   }
+  .search {
+    display: flex;
+    padding: 10px;
+    margin: 0 10px 10px;
+  }
   .flats {
     display: flex;
     flex-wrap: wrap;

@@ -14,13 +14,20 @@ class App extends Component {
   state = {
     flats: [],
     center: [2.3522, 48.8566],
-    selectedFlat: null
+    selectedFlat: null,
+    search: ''
   };
 
   componentDidMount() {
     fetch(FLATS_URL)
     .then (response => response.json())
     .then (data => this.setState({flats: data, center: [data[0].lng, data[0].lat]}));
+  }
+
+  handleSearch = (event) => {
+    const { value } = event.target;
+
+    this.setState({search: value})
   }
 
   handleSelect = (flatId) => {
@@ -34,13 +41,17 @@ class App extends Component {
   }
 
   render () {
-    const { flats, center, selectedFlat } = this.state;
+    const { flats, center, selectedFlat, search } = this.state;
+
+    const filteredFlats = flats.filter(flat => {
+      return flat.name.match(new RegExp(search, 'i'));
+    })
 
     return (
       <div className="app">
         <div className="main">
-          <input className="search" />
-          <FlatList selectedFlat={selectedFlat} flats={flats} onSelect={this.handleSelect} />
+          <input className="search" onChange={this.handleSearch} />
+          <FlatList selectedFlat={selectedFlat} flats={filteredFlats} onSelect={this.handleSelect} />
         </div>
         <div className="map">
           <Map
@@ -48,7 +59,7 @@ class App extends Component {
             center={center}
             containerStyle={{height: '100vh',width: '100%'}}
             style="mapbox://styles/mapbox/streets-v8">
-            {flats.map(flat => {
+            {filteredFlats.map(flat => {
               return (
                 <FlatMarker
                   selected={flat === selectedFlat}
